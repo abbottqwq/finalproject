@@ -2,5 +2,5 @@
 /TwitterAnalysis/target/
 /project/
 /target/
-/.idea/
-/.bsp/
+.idea
+.bsp
