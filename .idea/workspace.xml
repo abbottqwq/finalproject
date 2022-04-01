@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f0f8dbe9-0cb3-49d3-931e-5eef373ba8fc" name="Changes" comment="init: add hello_world">
-      <change afterPath="$PROJECT_DIR$/TwitterAnalysis/sbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,19 +78,6 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
-  </component>
-  <component name="Play2ProjectSettings">
-    <option name="LANGUAGE_IMPORTS">
-      <array>
-        <option value="_root_.play.twirl.api.JavaScript" />
-        <option value="_root_.play.twirl.api.Xml" />
-        <option value="_root_.play.twirl.api.Html" />
-        <option value="_root_.play.twirl.api.TwirlHelperImports._" />
-        <option value="_root_.play.twirl.api.TwirlFeatureImports._" />
-        <option value="play.api.templates.PlayMagic._" />
-        <option value="_root_.play.twirl.api.Txt" />
-      </array>
-    </option>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -294,6 +281,7 @@
       <workItem from="1648780059941" duration="125000" />
       <workItem from="1648780200014" duration="2236000" />
       <workItem from="1648784246614" duration="2545000" />
+      <workItem from="1648794574419" duration="21000" />
     </task>
     <task id="LOCAL-00001" summary="init: add hello_world">
       <created>1648781529277</created>
