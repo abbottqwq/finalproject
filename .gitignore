@@ -1,5 +1,4 @@
-/.bsp/
-/.idea/
-/target/
+/TwitterAnalysis/project/
+/TwitterAnalysis/target/
 /project/
-/logs/
+/target/
