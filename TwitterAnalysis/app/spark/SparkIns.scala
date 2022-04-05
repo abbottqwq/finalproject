@@ -13,7 +13,6 @@ case class SparkIns @Inject()(config: Configuration) {
 		.appName(config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject"))
 		.master(config.getStringOption("SPARK_MASTER").getOrElse("local[*]"))
 		.getOrCreate()
-
 	def getSpark = spark
 }
 
