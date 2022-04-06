@@ -27,8 +27,9 @@
     ````
   - fail
     ```json
-    {"success": "0", "Error": "AppName error", "AppName": name} // if the appname is incorrect. try to use colse spark to fix
-    ```` 
+    {"success": "0", "Error": "AppName error", "AppName": "AppName of the spark session now running"} 
+    ````  
+    if the appname is incorrect. try to use colse spark to fix
     ```json
     {"success": "0", "Error": "connection fail"} 
     ```
