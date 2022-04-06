@@ -14,5 +14,7 @@ case class SparkIns @Inject()(config: Configuration) {
 		.master(config.getStringOption("SPARK_MASTER").getOrElse("local[*]"))
 		.getOrCreate()
 	def getSpark = spark
+	def stopSpark = spark.stop()
+	def closeSpark = spark.close()
 }
 

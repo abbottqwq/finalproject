@@ -3,10 +3,10 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET        /                    controllers.TestController.index()
-GET        /testconnect         controllers.TestController.testConnection()
-GET        /testspark           controllers.TestController.testSpark()
+
+GET        /                   controllers.HomeController.index()
+GET        /test               controllers.TestController.test(action="testconnect")
+GET        /test/:action       controllers.TestController.test(action)
 
 
 
