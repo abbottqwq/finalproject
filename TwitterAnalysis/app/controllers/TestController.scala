@@ -1,15 +1,20 @@
 package controllers
 
 import play.api._
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
+import slick.jdbc.JdbcProfile
 import spark.SparkIns
 import utils.MyToJson._
 import utils.MyConfigLoader._
 
 import javax.inject._
 import scala.util._
-
 import utils.MyConfigLoader._
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 
 /**
@@ -17,7 +22,7 @@ import utils.MyConfigLoader._
  * application's home page.
  */
 @Singleton
-class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns) extends AbstractController(cc) {
+class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, dbConfigProvider: DatabaseConfigProvider) extends AbstractController(cc) {
 
 	def test(action: String) = Action {
 		implicit request: Request[AnyContent] => {
@@ -27,12 +32,12 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 					action match {
 						case "testconnect" => Ok(("Success" -> "1").toJson)
 						case "testspark" => testSpark(sparkIns)
-						case "closespark" => {
+						case "testdatabase" => testDatabase(dbConfigProvider)
+						case "closespark" =>
 							Try(sparkIns.stopSpark) match {
 								case Success(_) => Ok(("Success" -> "1").toJson)
 								case Failure(_) => Ok(("Success" -> "0").toJson)
 							}
-						}
 						case _ => NotFound("No Such Test")
 					}
 			}
@@ -40,20 +45,25 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 	}
 
 	def testSpark(sparkIns: SparkIns): Result = {
-		val stateMap = {
-			Try(sparkIns.getSpark.sessionState) match {
-				case Success(_) => {
-					Try(sparkIns.getSpark.sparkContext.appName) match {
-						case Success(name) if name == config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject") => Map("Success" -> "1", "AppName" -> name)
-						case Success(name) => Map("Success" -> "1", "Error" -> "AppName error", "AppName" -> name)
-						case Failure(_) => Map("Success" -> "0", "Error" -> "connection fail")
-					}
+		Ok((Try(sparkIns.getSpark.sessionState) match {
+			case Success(_) =>
+				Try(sparkIns.getSpark.sparkContext.appName) match {
+					case Success(name) if name == config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject") => Map("Success" -> "1", "AppName" -> name)
+					case Success(name) => Map("Success" -> "1", "Error" -> "AppName error", "AppName" -> name)
+					case Failure(f) => Map("Success" -> "0", "Error" -> "Spark connection fail", "Reason" -> f.toString)
 				}
-				case Failure(_) => Map("Success" -> "0", "Error" -> "connection fail")
-			}
-		}
-		Ok(stateMap.toJson)
+			case Failure(f) => Map("Success" -> "0", "Error" -> "Spark connection fail", "Reason" -> f.toString)
+		}).toJson)
+
 	}
 
-
+	def testDatabase(dbConfigProvider: DatabaseConfigProvider): Result = {
+		val dbConfig = dbConfigProvider.get[JdbcProfile]
+		import dbConfig._
+		import profile.api._
+		Ok((Try(Await.result(db.run(sql"SELECT * FROM pg_catalog.pg_tables;".as[String]), Duration.Inf)) match {
+			case Success(_) => Map("Success" -> "1")
+			case Failure(f) => Map("Success" -> "0", "Error" -> "database connection fail", "Reason" -> f.toString)
+		}).toJson)
+	}
 }

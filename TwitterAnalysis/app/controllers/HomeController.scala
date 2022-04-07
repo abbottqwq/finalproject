@@ -12,6 +12,7 @@ import scala.util._
 class HomeController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns) extends AbstractController(cc) {
 	def index() = Action {
 		implicit request: Request[AnyContent] => {
+			// Ok(s"${config.getStringOption("PGURL").getOrElse("notfound")}")
 			Ok("hello world")
 		}
 	}
