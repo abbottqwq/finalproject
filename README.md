@@ -2,14 +2,15 @@
 ## test the project
 > before running, remember to **RENAME .env.example to .env**
 ### using docker
-
 - Dockerfile for prod (disable the test URLs)
 - Dockerfile.dev for dev (enable the test URLs)
 
 ### using sbt
-
 - sbt run -Dconfig.file=conf/prod.conf for prod (disable the test URLs)
 - sbt run for dev (enable the test URLs)
+
+### using docker-compose for dev mode (prod mode not included)
+- `docker-compose up --build --force-recreate`
 
 ## dev mode
 ### test api:
