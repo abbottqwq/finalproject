@@ -5,7 +5,7 @@ import play.api.Configuration
 
 import javax.inject._
 
-import utils.MyConfigLoader._
+import utils.implicits.MyConfigLoader._
 
 @Singleton
 case class SparkIns @Inject()(config: Configuration) {

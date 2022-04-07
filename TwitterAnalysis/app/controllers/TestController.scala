@@ -5,12 +5,12 @@ import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
 import spark.SparkIns
-import utils.MyToJson._
-import utils.MyConfigLoader._
+import utils.implicits.MyToJson._
+import utils.implicits.MyConfigLoader._
 
 import javax.inject._
 import scala.util._
-import utils.MyConfigLoader._
+import utils.implicits.MyConfigLoader._
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
