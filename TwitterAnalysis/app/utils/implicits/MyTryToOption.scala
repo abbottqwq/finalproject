@@ -1,5 +1,6 @@
 package utils.implicits
 
+import scala.language.implicitConversions
 import scala.util.{Failure, Success, Try}
 
 object MyTryToOption {
