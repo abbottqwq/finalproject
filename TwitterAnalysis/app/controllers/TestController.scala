@@ -45,9 +45,9 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 	}
 
 	def testSpark(sparkIns: SparkIns): Result = {
-		Ok((Try(sparkIns.getSpark.sessionState) match {
+		Ok((Try(sparkIns.spark.sessionState) match {
 			case Success(_) =>
-				Try(sparkIns.getSpark.sparkContext.appName) match {
+				Try(sparkIns.spark.sparkContext.appName) match {
 					case Success(name) if name == config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject") => Map("Success" -> "1", "AppName" -> name)
 					case Success(name) => Map("Success" -> "1", "Error" -> "AppName error", "AppName" -> name)
 					case Failure(f) => Map("Success" -> "0", "Error" -> "Spark connection fail", "Reason" -> f.toString)

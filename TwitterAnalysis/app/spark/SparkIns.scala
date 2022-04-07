@@ -9,11 +9,10 @@ import utils.MyConfigLoader._
 
 @Singleton
 case class SparkIns @Inject()(config: Configuration) {
-	val spark = SparkSession.builder()
+	def spark = SparkSession.builder()
 		.appName(config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject"))
 		.master(config.getStringOption("SPARK_MASTER").getOrElse("local[*]"))
 		.getOrCreate()
-	def getSpark = spark
 	def stopSpark = spark.stop()
 	def closeSpark = spark.close()
 }
