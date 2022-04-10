@@ -6,3 +6,9 @@
 .bsp
 /TwitterAnalysis/project/target/
 /TwitterAnalysis/logs
+.env
+TwitterAnalysis/.DS_Store
+.metals
+.vscode
+.bloop
+.DS_Store

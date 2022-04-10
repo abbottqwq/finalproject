@@ -1,8 +1,6 @@
-package utils
+package utils.implicits
 
-import play.api.libs.json._
-
-import scala.language.implicitConversions
+import play.api.libs.json.{Json, Writes}
 
 object MyToJson {
 	implicit class MyToJson[A](a: A) {
@@ -10,5 +8,5 @@ object MyToJson {
 			Json.toJson(a)
 		}
 	}
-	
+
 }

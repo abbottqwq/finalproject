@@ -1,10 +1,10 @@
-package utils
+package utils.implicits
 
-import utils.MyTryToOption._
-import play.api._
+import play.api.{ConfigLoader, Configuration}
 
-import scala.language.implicitConversions
 import scala.util.Try
+
+import MyTryToOption._
 
 object MyConfigLoader {
 
@@ -14,5 +14,3 @@ object MyConfigLoader {
 		}
 	}
 }
-
-
