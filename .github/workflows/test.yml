@@ -15,7 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker compose
-      run: docker-compose up --force-recreate --quiet-pull
+      run: |
+        cp .env.example .env
+        docker-compose up --force-recreate --quiet-pull
       
     
     - name: install python
@@ -29,6 +31,7 @@ jobs:
         pip install -r requirements.txt
         
     - name: run test
+      working-directory: ./test_script
       run: python -m unittest test.py
 
       
