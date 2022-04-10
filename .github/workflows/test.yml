@@ -17,13 +17,17 @@ jobs:
     - name: Build the Docker compose
       run: |
         cp .env.example .env
-        docker-compose up --force-recreate -d --build
+        docker-compose up -d --build
+        
+    - name: Sleep for 30 seconds
+      run: sleep 45s
+      shell: bash
       
-    
     - name: install python
       uses: actions/setup-python@v3
       with:
         python-version: 3.8
+        
     - name: install dep
       working-directory: ./test_script
       run: |
@@ -33,6 +37,10 @@ jobs:
     - name: run test
       working-directory: ./test_script
       run: python -m unittest test.py
+      
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose.yml" down
 
       
       
