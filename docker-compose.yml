@@ -10,6 +10,8 @@ services:
     build:
       context: TwitterAnalysis/
       dockerfile: Dockerfile.dev
+    depends_on:
+      - postgres
     env_file:
       - .env
     ports:
