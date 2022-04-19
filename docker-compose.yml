@@ -1,4 +1,11 @@
 version: '3'
+volumes:
+  web_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./resource
 
 services:
   postgres:
@@ -10,9 +17,12 @@ services:
     build:
       context: TwitterAnalysis/
       dockerfile: Dockerfile.dev
+
     depends_on:
       - postgres
     env_file:
       - .env
     ports:
       - "9000:9000"
+    volumes:
+      - web_data:/twitteranalysis/resource
