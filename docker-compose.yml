@@ -5,7 +5,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./resources
+      device: ./resource
 
 services:
   postgres:
@@ -25,4 +25,4 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - web_data:/twitteranalysis/resources
+      - web_data:/twitteranalysis/resource
