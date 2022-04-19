@@ -1,0 +1,5 @@
+package DAO
+
+trait IDao {
+
+}
