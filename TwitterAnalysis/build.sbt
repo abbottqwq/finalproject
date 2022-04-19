@@ -15,7 +15,8 @@ lazy val root = (project in file("."))
 			"com.typesafe.play" %% "play-slick" % "5.0.0",
 			"org.postgresql" % "postgresql" % "42.3.3",
 			"org.apache.spark" %% "spark-mllib" % "3.2.1",
-			"com.johnsnowlabs.nlp" %% "spark-nlp-spark32" % "3.4.3"
+			"com.johnsnowlabs.nlp" %% "spark-nlp-spark32" % "3.4.3",
+			"org.projectlombok" % "lombok" % "1.18.22"
 		),
 		scalacOptions ++= Seq(
 			"-feature",
