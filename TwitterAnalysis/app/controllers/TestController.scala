@@ -16,13 +16,14 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
+import service.Analyzer
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, dbConfigProvider: DatabaseConfigProvider) extends AbstractController(cc) {
+class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, dbConfigProvider: DatabaseConfigProvider, analyzer: Analyzer) extends AbstractController(cc) {
 
 	def test(action: String) = Action {
 		implicit request: Request[AnyContent] => {
@@ -38,6 +39,7 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 								case Success(_) => Ok(("Success" -> "1").toJson)
 								case Failure(_) => Ok(("Success" -> "0").toJson)
 							}
+						case "testpreprocess" => testPreProcess()
 						case _ => NotFound("No Such Test")
 					}
 			}
@@ -64,6 +66,14 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 		Ok((Try(Await.result(db.run(sql"SELECT * FROM pg_catalog.pg_tables;".as[String]), Duration.Inf)) match {
 			case Success(_) => Map("Success" -> "1")
 			case Failure(f) => Map("Success" -> "0", "Error" -> "database connection fail", "Reason" -> f.toString)
+		}).toJson)
+	}
+
+	def testPreProcess(): Result = {
+		analyzer.testRun
+		Ok((Try(analyzer.testRun) match {
+			case Success(_) => Map("Success" -> "1")
+			case Failure(f) => Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString)
 		}).toJson)
 	}
 }
