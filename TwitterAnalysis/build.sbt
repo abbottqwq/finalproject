@@ -12,7 +12,6 @@ lazy val root = (project in file("."))
 			guice,
 			"org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
 			"org.apache.spark" %% "spark-sql" % "3.2.1",
-			"com.typesafe.play" %% "play-slick" % "5.0.0",
 			"org.postgresql" % "postgresql" % "42.3.3"
 		),
 		scalacOptions ++= Seq(
