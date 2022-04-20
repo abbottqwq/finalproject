@@ -53,7 +53,3 @@
     ```
 - other
   - Code: `404 Not Found`
-
-## service module in app
-### about Analyzer
-- you can run it in local to test sample.csv preprocessing result
