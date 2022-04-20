@@ -38,11 +38,12 @@ object Analyzer extends AnalyzerBase with App {
 
   val base_df = result.select("tweet_id", "author_id", "created_at", "new_text")
   base_df.show(10, truncate = false)
-  // show data type of each column
-  base_df.dtypes.foreach(f=>println(f._1+","+f._2))
   val second_df = base_df.select(col("tweet_id").as("base_id"),
     explode(col("new_text")).as("tweets")).withColumn("id", monotonically_increasing_id())
   second_df.show(20, false)
-  // show data type of each column
-  second_df.dtypes.foreach(f=>println(f._1+","+f._2))
+
+  // insert into database
+//  val tweetDao: TweetDAO = new TweetImplDAO()
+//  tweetDao.writeCustomerSupport(result)
+//  tweetDao.writeTweets(result)
 }

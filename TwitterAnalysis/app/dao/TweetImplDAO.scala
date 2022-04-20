@@ -10,10 +10,10 @@ class TweetImplDAO extends TweetDAO {
     val base_df = df.select("tweet_id", "author_id", "created_at", "new_text")
     base_df.write
       .format("jdbc")
-      .option("url", "jdbc:postgresql:dbserver")
-      .option("dbtable", "schema.t_customer_support")
-      .option("user", "username")
-      .option("password", "password")
+      .option("url", "jdbc:postgresql:postgres")
+      .option("dbtable", "public.t_customer_support")
+      .option("user", "postgres")
+      .option("password", "")
       .save()
   }
 
@@ -24,10 +24,10 @@ class TweetImplDAO extends TweetDAO {
       explode(col("new_text")).as("tweets")).withColumn("id", monotonically_increasing_id())
     second_df.write
       .format("jdbc")
-      .option("url", "jdbc:postgresql:dbserver")
-      .option("dbtable", "schema.t_tweets")
-      .option("user", "username")
-      .option("password", "password")
+      .option("url", "jdbc:postgresql:postgres")
+      .option("dbtable", "public.t_tweets")
+      .option("user", "postgres")
+      .option("password", "")
       .save()
   }
 }
