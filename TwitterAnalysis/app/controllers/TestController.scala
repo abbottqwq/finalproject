@@ -1,24 +1,28 @@
 package controllers
 
-import dao.TableName
 import play.api._
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
-import service.Analyzer
+import slick.jdbc.JdbcProfile
 import spark.SparkIns
-import utils.implicits.MyConfigLoader._
 import utils.implicits.MyToJson._
+import utils.implicits.MyConfigLoader._
 
 import javax.inject._
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 import scala.util._
+import utils.implicits.MyConfigLoader._
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, analyzer: Analyzer) extends AbstractController(cc) {
+class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, dbConfigProvider: DatabaseConfigProvider) extends AbstractController(cc) {
 
 	def test(action: String) = Action {
 		implicit request: Request[AnyContent] => {
@@ -28,13 +32,12 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 					action match {
 						case "testconnect" => Ok(("Success" -> "1").toJson)
 						case "testspark" => testSpark(sparkIns)
-						case "testdatabase" => testDatabase()
+						case "testdatabase" => testDatabase(dbConfigProvider)
 						case "closespark" =>
 							Try(sparkIns.stopSpark) match {
 								case Success(_) => Ok(("Success" -> "1").toJson)
 								case Failure(_) => Ok(("Success" -> "0").toJson)
 							}
-						case "testpreprocess" => testPreProcess()
 						case _ => NotFound("No Such Test")
 					}
 			}
@@ -54,19 +57,13 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 
 	}
 
-	def testDatabase(): Result = {
-		Try(sparkIns.readTable(TableName("test")).show()) match {
-			case Success(_) => Ok(("Success" -> "1").toJson)
-			case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "Database connection fail", "Reason" -> f.toString).toJson)
-		}
-
-	}
-
-	def testPreProcess(): Result = {
-		analyzer.run()
-		Ok((Try(analyzer.run()) match {
+	def testDatabase(dbConfigProvider: DatabaseConfigProvider): Result = {
+		val dbConfig = dbConfigProvider.get[JdbcProfile]
+		import dbConfig._
+		import profile.api._
+		Ok((Try(Await.result(db.run(sql"SELECT * FROM pg_catalog.pg_tables;".as[String]), Duration.Inf)) match {
 			case Success(_) => Map("Success" -> "1")
-			case Failure(f) => Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString)
+			case Failure(f) => Map("Success" -> "0", "Error" -> "database connection fail", "Reason" -> f.toString)
 		}).toJson)
 	}
 }
