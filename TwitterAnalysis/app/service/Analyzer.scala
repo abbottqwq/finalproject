@@ -12,7 +12,7 @@ case class Analyzer @Inject()(sparkIns: SparkIns) extends AnalyzerBase {
 
   def run(sparkIns: SparkIns): Unit = {
     val spark: SparkSession = sparkIns.spark
-    val path: String = getClass.getResource("/twcs.csv").getPath
+    val path: String = getClass.getResource("/sample.csv").getPath
     val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv(path)
     val result = super.preprocessing(df)
     // save base table to database
@@ -38,12 +38,9 @@ object Analyzer extends AnalyzerBase with App {
 
   val base_df = result.select("tweet_id", "author_id", "created_at", "new_text")
   base_df.show(10, truncate = false)
+
   val second_df = base_df.select(col("tweet_id").as("base_id"),
     explode(col("new_text")).as("tweets")).withColumn("id", monotonically_increasing_id())
-  second_df.show(20, false)
+  second_df.show(10, truncate = false)
 
-  // insert into database
-//  val tweetDao: TweetDAO = new TweetImplDAO()
-//  tweetDao.writeCustomerSupport(result)
-//  tweetDao.writeTweets(result)
 }
