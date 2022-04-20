@@ -10,14 +10,13 @@ import org.apache.spark.sql.functions.{col, regexp_replace, split, trim}
 class AnalyzerBase {
 
   def preprocessing(df: DataFrame): DataFrame = {
-    // clean data, keep users' responses, remove companies' responses
+    // clean data, keep users' responses, remove companies' responses and irregular responses
     val df_true = df.filter("inbound=TRUE")
+      .filter(col("text").startsWith("@"))
 
-    // clean data, remove first word
-    val df_without_first = df_true.withColumn("text", split(col("text"), " ", 2)(1))
-
-    // clean data, replace author_id with company_name
-    val df_with_company = df_without_first.withColumn("author_id", split(col("text"), " ", 2)(0))
+    // clean data, remove first word, replace author_id with company_name
+    val split_array = split(col("text"), " ", 2)
+    val df_with_company = df_true.withColumn("author_id", split_array(0)).withColumn("text", split_array(1))
 
     // clean data, trim + remove urls
     val cleaned_df = df_with_company.withColumn("text",

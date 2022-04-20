@@ -66,8 +66,7 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
   }
 
   def testPreProcess(sparkIns: SparkIns): Result = {
-    val df = analyzer.run(sparkIns)
-    Ok((Try(df) match {
+    Ok((Try(analyzer.run(sparkIns)) match {
       case Success(_) => Map("Success" -> "1")
       case Failure(f) => Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString)
     }).toJson)
