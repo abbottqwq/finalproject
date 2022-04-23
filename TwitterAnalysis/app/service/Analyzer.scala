@@ -10,10 +10,10 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO) extends AnalyzerBase {
 
-	def run(): Unit = {
+	def testRun(): Unit = {
 		val spark: SparkSession = sparkIns.spark
-		val path: String = getClass.getResource("/sample.csv").getPath
-		val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv(path)
+		//		val path: String = ClassLoader.getSystemResource("/sample.csv").getPath
+		val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/sample.csv")
 		val result = super.preprocessing(df)
 		// save base table to database
 

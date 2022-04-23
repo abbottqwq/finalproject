@@ -13,4 +13,5 @@ TwitterAnalysis/.DS_Store
 .bloop
 .DS_Store
 /TwitterAnalysis/resources/twcs.csv
-resources
+resources/twcs.csv
+/TwitterAnalysis/resources/
