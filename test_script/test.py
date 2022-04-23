@@ -12,7 +12,7 @@ def req(action: str):
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
-        actions = ["testconnect", "testspark", "testdatabase", "testdatabase"]
+        actions = ["testconnect", "testspark", "testdatabase", "testpreprocess"]
         for action in actions:
             self.assertNotIn("Error", req(action))  # add assertion here
 
