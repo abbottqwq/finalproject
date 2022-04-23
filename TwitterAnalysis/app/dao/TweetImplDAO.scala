@@ -17,14 +17,15 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	// Todo replace below options of these methods with correct config
 	def writeCustomerSupport(df: DataFrame): Unit = {
 		val base_df = df.select("tweet_id", "author_id", "created_at", "new_text")
-		base_df.write
-			.format("jdbc")
-			.mode(SaveMode.Overwrite)
-			.option("url", "jdbc:postgresql:postgres")
-			.option("dbtable", "public.t_customer_support")
-			.option("user", "postgres")
-			.option("password", "")
-			.save()
+		//		base_df.write
+		//			.format("jdbc")
+		//			.mode(SaveMode.Overwrite)
+		//			.option("url", "jdbc:postgresql:postgres")
+		//			.option("dbtable", "public.t_customer_support")
+		//			.option("user", "postgres")
+		//			.option("password", "")
+		//			.save()
+		sparkIns.writeTable(base_df)(TableName("t_customer_support")).mode(SaveMode.Overwrite).save()
 	}
 
 	def writeTweets(df: DataFrame): Unit = {
