@@ -9,12 +9,17 @@ on:
 
 permissions:
   contents: read
+  
+
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres:latest
+        env: 
+          POSTGRES_PASSWORD: "postgres_password"
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
