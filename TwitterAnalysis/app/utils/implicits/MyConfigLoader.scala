@@ -12,5 +12,14 @@ object MyConfigLoader {
 		def getStringOption(path: String): Option[String] = {
 			Try(config.get(path)(ConfigLoader(_.getString)))
 		}
+
+		def getBoolOption(path: String): Option[Boolean] = {
+			Try(config.get(path)(ConfigLoader(_.getBoolean)))
+		}
+
+		def getIntOption(path: String): Option[Int] = {
+			Try(config.get(path)(ConfigLoader(_.getInt)))
+		}
+
 	}
 }
