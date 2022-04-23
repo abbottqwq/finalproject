@@ -20,6 +20,8 @@ jobs:
         image: postgres:latest
         env: 
           POSTGRES_PASSWORD: "postgres_password"
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
