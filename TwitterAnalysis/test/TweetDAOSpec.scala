@@ -10,25 +10,21 @@ import scala.util.{Success, Try}
 
 class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 
-	implicit var spark: SparkSession = _
 	implicit var config: Configuration = _
 	implicit var sparkIns: SparkIns = _
 
 	before {
-		spark = SparkSession
-			.builder()
-			.appName("TwitterAnalysis")
-			.master("local[*]")
-			.getOrCreate()
-		spark.sparkContext.setLogLevel("ERROR")
 
 		config = Configuration("isLocalTest" -> true,
 			"SDB.driver" -> "org.postgresql.Driver",
 			"SDB.url" -> "jdbc:postgresql:postgres",
 			"SDB.user" -> "postgres",
-			"SDB.password" -> "postgres")
+			"SDB.password" -> "postgres",
+			"SPARK_MASTER" -> "local[*]",
+			"SPARK_APP_NAME" -> "finalproject"
+		)
 
-		sparkIns = SparkIns(config, Option(spark))
+		sparkIns = SparkIns(config)
 
 	}
 
@@ -36,7 +32,7 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 		"write_customer_support" in {
 			val ab = new AnalyzerBase()
 			val path: String = getClass.getResource("/sample.csv").getPath
-			val df = spark.read.option("delimiter", ",").option("header", "true").csv(path)
+			val df = sparkIns.spark.read.option("delimiter", ",").option("header", "true").csv(path)
 			val result = ab.preprocessing(df)
 			val tweetImplDAO = new TweetImplDAO(sparkIns)
 			Try(tweetImplDAO.writeCustomerSupport(result)) mustBe a[Success[_]]
@@ -45,7 +41,7 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 		"write_tweets" in {
 			val ab = new AnalyzerBase()
 			val path: String = getClass.getResource("/sample.csv").getPath
-			val df = spark.read.option("delimiter", ",").option("header", "true").csv(path)
+			val df = sparkIns.spark.read.option("delimiter", ",").option("header", "true").csv(path)
 			val result = ab.preprocessing(df)
 
 			val tweetImplDAO = new TweetImplDAO(sparkIns)

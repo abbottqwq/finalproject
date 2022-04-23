@@ -8,18 +8,15 @@ import javax.inject._
 import utils.implicits.MyConfigLoader._
 
 @Singleton
-case class SparkIns @Inject()(config: Configuration, sparkSessionOption: Option[SparkSession] = None) {
+case class SparkIns @Inject()(config: Configuration) {
 
-	val isLocalTest = config.getBoolOption("isLocalTest").getOrElse(false)
 
-	def spark = isLocalTest match {
-		case false =>
-			SparkSession.builder()
-				.appName(config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject"))
-				.master(config.getStringOption("SPARK_MASTER").getOrElse("local[*]"))
-				.getOrCreate()
-		case true => sparkSessionOption.getOrElse(throw new Exception("sparkSessionOption is not defined"))
-	}
+	def spark =
+		SparkSession.builder()
+			.appName(config.getStringOption("SPARK_APP_NAME").getOrElse("finalproject"))
+			.master(config.getStringOption("SPARK_MASTER").getOrElse("local[*]"))
+			.getOrCreate()
+
 
 	def stopSpark = spark.stop()
 	def closeSpark = spark.close()
