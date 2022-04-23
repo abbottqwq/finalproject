@@ -1,0 +1,3 @@
+FROM postgres:latest
+ENV POSTGRES_PASSWORD=postgres_password
+ADD createTestTable.sql /docker-entrypoint-initdb.d/
