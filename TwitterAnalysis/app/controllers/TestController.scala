@@ -32,7 +32,7 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 						case "closespark" =>
 							Try(sparkIns.stopSpark) match {
 								case Success(_) => Ok(("Success" -> "1").toJson)
-								case Failure(_) => Ok(("Success" -> "0").toJson)
+								case Failure(f) => Ok(("Success" -> "0", "error" -> "stop spark fail", "reason" -> f.toString).toJson)
 							}
 						case "testpreprocess" => testPreProcess()
 						case _ => NotFound("No Such Test")
