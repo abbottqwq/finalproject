@@ -2,6 +2,8 @@ package controllers
 
 import dao.TableName
 import play.api._
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc._
 import service.Analyzer
 import spark.SparkIns
@@ -9,8 +11,6 @@ import utils.implicits.MyConfigLoader._
 import utils.implicits.MyToJson._
 
 import javax.inject._
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 import scala.util._
 
 /**
@@ -62,11 +62,10 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 
 	}
 
-	def testPreProcess(): Result = {
-		analyzer.testRun()
-		Ok((Try(analyzer.testRun()) match {
-			case Success(_) => Map("Success" -> "1")
-			case Failure(f) => Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString)
-		}).toJson)
-	}
+  def testPreProcess(): Result = {
+    Try(analyzer.testRun()) match {
+      case Success(_) => Ok(("Success" -> "1").toJson)
+      case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
+    }
+  }
 }

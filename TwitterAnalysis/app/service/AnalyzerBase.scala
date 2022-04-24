@@ -16,11 +16,13 @@ class AnalyzerBase {
 
 		// clean data, remove first word, replace author_id with company_name
 		val split_array = split(col("text"), " ", 2)
-		val df_with_company = df_true.withColumn("author_id", split_array(0)).withColumn("text", split_array(1))
+		val df_with_company = df_true.withColumn("author_id", split_array(0))
+			.withColumn("text", split_array(1))
 
 		// clean data, trim + remove urls
 		val cleaned_df = df_with_company.withColumn("text",
-			regexp_replace(trim(col("text")), "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", ""))
+			regexp_replace(trim(col("text")),
+				"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", ""))
 
 		cleaned_df.select("text").show(10, truncate = false)
 
