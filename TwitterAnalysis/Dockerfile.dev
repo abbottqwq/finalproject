@@ -4,6 +4,6 @@ RUN curl -L -o sbt-$SBT_VERSION.zip https://github.com/sbt/sbt/releases/download
 RUN unzip sbt-$SBT_VERSION.zip -d ops
 
 WORKDIR /twitteranalysis
-COPY . /twitteranalysis
+#COPY . /twitteranalysis
 EXPOSE 9000
 CMD ["./sbt", "run"]
