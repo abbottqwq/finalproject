@@ -1,5 +1,4 @@
-import dao.{DAO, TweetImplDAO}
-import org.apache.spark.sql.SparkSession
+import dao.TweetImplDAO
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
@@ -19,7 +18,7 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 			"SDB.driver" -> "org.postgresql.Driver",
 			"SDB.url" -> "jdbc:postgresql:postgres",
 			"SDB.user" -> "postgres",
-			"SDB.password" -> "postgres",
+			"SDB.password" -> "",
 			"SPARK_MASTER" -> "local[*]",
 			"SPARK_APP_NAME" -> "finalproject"
 		)

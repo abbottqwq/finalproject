@@ -3,6 +3,8 @@ package service
 import _root_.spark.SparkIns
 import dao.TweetImplDAO
 import model.{TweetResult, TweetTimeResult}
+import dao.TweetImplDAO
+import model.TweetResult
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import javax.inject.{Inject, Singleton}
