@@ -21,7 +21,9 @@ jobs:
         docker-compose up -d --build
         
     - name: Wait the container to be stable
-      run: sleep 45s
+      run: |
+        sleep 45s
+        docker ps -a
       shell: bash
       
     - name: Using python3 env
