@@ -8,5 +8,4 @@ object MyToJson {
 			Json.toJson(a)
 		}
 	}
-
 }
