@@ -13,7 +13,7 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration, 
 	def index() = Action {
 		implicit request: Request[AnyContent] => {
 			// Ok(s"${config.getStringOption("PGURL").getOrElse("notfound")}")
-			Ok("hello world")
+			Ok("hello world!")
 		}
 	}
 }

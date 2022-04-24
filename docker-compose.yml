@@ -8,10 +8,31 @@ volumes:
       device: ./resources
 
 services:
+
+  client:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+
   postgres:
     build:
       context: Database
       dockerfile: Dockerfile.dev
+
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "9999:80"
 
   api:
     build:
@@ -26,3 +47,4 @@ services:
       - "9000:9000"
     volumes:
       - web_data:/twitteranalysis/resources
+      - ./TwitterAnalysis:/twitteranalysis
