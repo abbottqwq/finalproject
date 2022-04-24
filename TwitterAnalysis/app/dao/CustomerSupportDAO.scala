@@ -1,7 +1,5 @@
 package dao
 
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.col
 import spark.SparkIns
 
 import javax.inject.{Inject, Singleton}
