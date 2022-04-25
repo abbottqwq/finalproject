@@ -9,10 +9,10 @@ export function InitButton() {
 		request(urls.initData, "POST");
 	};
 	useEffect(() => {
-		console.log(res);
+		if (res) console.log(res);
 	}, [res]);
 	useEffect(() => {
-		console.log(error);
+		if (error) console.log(error);
 	}, [error]);
 	return (
 		<Button type="primary" loading={loading} onClick={onClickFun}>
