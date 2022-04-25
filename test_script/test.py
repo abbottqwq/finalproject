@@ -5,7 +5,8 @@ import config
 
 
 def req(action: str):
-    json = requests.get(config.URL + action).json()
+    header = { "Content-Type": "application/json" }
+    json = requests.get(config.URL + action, headers=header).json()
     print(action + ": " + str(json))
     return json
 
@@ -18,4 +19,5 @@ class MyTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
     unittest.main()
