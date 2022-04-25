@@ -1,4 +1,5 @@
-import dao.TweetImplDAO
+import dao.{DAO, TweetImplDAO}
+import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
@@ -18,9 +19,9 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 			"SDB.driver" -> "org.postgresql.Driver",
 			"SDB.url" -> "jdbc:postgresql:postgres",
 			"SDB.user" -> "postgres",
-			"SDB.password" -> "xiaoyi2008",
+			"SDB.password" -> "postgres",
 			"SPARK_MASTER" -> "local[*]",
-			"SPARK_APP_NAME" -> "PostgreSQL 14"
+			"SPARK_APP_NAME" -> "finalproject"
 		)
 
 		sparkIns = SparkIns(config)
@@ -51,9 +52,9 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 
 		"read_data_by_company" in {
 			val tweetImplDAO = new TweetImplDAO(sparkIns)
-			val result = tweetImplDAO.readByCompanyName("@AppleSupport")
+			val result = tweetImplDAO.readByCompanyName("AppleSupport")
 			result.show(truncate = false)
-			result.count() mustBe 20
+			result.count() mustBe 71
 		}
 	}
 }

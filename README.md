@@ -53,3 +53,52 @@
     ```
 - other
   - Code: `404 Not Found`
+
+## API
+make sure to run the init data api first to insert data
+- init data `POST /initdata`
+    ```json
+    {"success": "1"}
+    ```
+- select keywords by company name (you can use name=AppleSupport to test) `GET /selectByComp?name=XXX`  
+    ```json
+    {
+        "Success": "0",
+        "Data": [
+            {
+                "tweets": "ios",
+                "time_to_month": "2017-10",
+                "freq": "4"
+            },
+            {
+                "tweets": "latest",
+                "time_to_month": "2017-10",
+                "freq": "3"
+            }
+        ]
+    }
+    ```
+- select keywords by time period or company name or both `GET /selectByTime?start=2017-10-10&end=2017-10-11&name=AppleSupport`
+ if you want to select by time period, request parameters will be start and end,
+ if you want to select by both time period and company, you should add name to request parameters 
+    ```json
+    {
+        "Success": "0",
+        "Data": [
+            {
+                "tweets": "ios",
+                "time_to_month": "2017-10",
+                "author_id": "AppleSupport",
+                "freq": "4"
+            },
+            {
+                "tweets": "latest",
+                "time_to_month": "2017-10",
+                "author_id": "AppleSupport",
+                "freq": "3"
+            }
+        ]
+    }
+    ```
+
+
