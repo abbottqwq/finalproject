@@ -11,6 +11,6 @@ POST       /initdata           controllers.HomeController.initData()
 GET        /selectByComp       controllers.HomeController.selectByCompanyName(name)
 # GET        /selectByTime       controllers.HomeController.selectByTime(start:String, end:String, name:Option[String])
 POST       /selectByTime       controllers.HomeController.selectByTime()
-
+POST       /selectCompanyName  controllers.HomeController.selectCompanyNames()
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)

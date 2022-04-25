@@ -1,18 +1,16 @@
 package controllers
 
-import play.api._
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import service.Analyzer
-import spark.SparkIns
-import utils.implicits.MyToJson._
 import utils.helper.ErrorReturn
+import utils.implicits.MyToJson._
 
 import javax.inject._
 import scala.language.postfixOps
 import scala.util._
 
-class HomeController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, analyzer: Analyzer) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) extends AbstractController(cc) {
 	def index() = Action {
 		implicit request: Request[AnyContent] => {
 			Ok("hello world!")
@@ -81,6 +79,15 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration, 
     }
   }
 				case _ => BadRequest("data error")
+			}
+		}
+	}
+
+	def selectCompanyNames() = Action {
+		implicit request: Request[AnyContent] => {
+			Try(analyzer.getCompanyName()) match {
+				case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+				case Failure(f) => BadRequest(Map("Success" -> "0", "Error" -> "get company name fail", "Reason" -> f.toString).toJson)
 			}
 		}
 	}

@@ -100,5 +100,32 @@ make sure to run the init data api first to insert data
         ]
     }
     ```
-
+- select company names `POST /selectCompanyName`
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            "AppleSupport",
+            "AmazonHelp",
+            "Uber_Support",
+            "Delta",
+            "SpotifyCares",
+            "Tesco",
+            "AmericanAir",
+            "comcastcares",
+            "TMobileHelp",
+            "British_Airways",
+            "SouthwestAir",
+            "Ask_Spectrum",
+            "hulu_support",
+            "ChipotleTweets",
+            "sprintcare",
+            "VirginTrains",
+            "AskPlayStation",
+            "XboxSupport",
+            "UPSHelp",
+            "sainsburys"
+        ]
+    }
+    ```
 
