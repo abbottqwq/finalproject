@@ -17,3 +17,4 @@ resources/twcs.csv
 /TwitterAnalysis/resources/
 /client/node_modules
 test_script/__pycache__
+client/build
