@@ -26,13 +26,13 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 				case "0" => Forbidden("only for dev mode")
 				case "1" =>
 					action match {
-						case "testconnect" => Ok(("Success" -> "1").toJson)
+						case "testconnect" => Ok(Map("Success" -> "1").toJson)
 						case "testspark" => testSpark(sparkIns)
 						case "testdatabase" => testDatabase()
 						case "closespark" =>
 							Try(sparkIns.stopSpark) match {
-								case Success(_) => Ok(("Success" -> "1").toJson)
-								case Failure(f) => Ok(("Success" -> "0", "error" -> "stop spark fail", "reason" -> f.toString).toJson)
+								case Success(_) => Ok(Map("Success" -> "1").toJson)
+								case Failure(f) => Ok(Map("Success" -> "0", "error" -> "stop spark fail", "reason" -> f.toString).toJson)
 							}
 						case "testpreprocess" => testPreProcess()
 						case _ => NotFound("No Such Test")

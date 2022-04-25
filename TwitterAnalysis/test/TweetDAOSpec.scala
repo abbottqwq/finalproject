@@ -1,4 +1,5 @@
-import dao.TweetImplDAO
+import dao.{DAO, TweetImplDAO}
+import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
@@ -53,7 +54,7 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 			val tweetImplDAO = new TweetImplDAO(sparkIns)
 			val result = tweetImplDAO.readByCompanyName("@AppleSupport")
 			result.show(truncate = false)
-			result.count() mustBe 20
+			result.count() mustBe 10
 		}
 	}
 }

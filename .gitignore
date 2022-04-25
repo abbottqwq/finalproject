@@ -15,3 +15,5 @@ TwitterAnalysis/.DS_Store
 /TwitterAnalysis/resources/twcs.csv
 resources/twcs.csv
 /TwitterAnalysis/resources/
+/client/node_modules
+test_script/__pycache__

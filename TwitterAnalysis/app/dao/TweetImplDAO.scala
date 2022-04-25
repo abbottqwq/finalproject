@@ -53,10 +53,10 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	/**
 	 * get keywords from specific company sort and time period sort by frequency
 	 */
-	def readByConpanyAndTime(name: String, start: String, end: String): DataFrame = {
+	def readByCompanyAndTime(name: String, start: String, end: String): DataFrame = {
 		sparkIns.loadRead()
-			.option("query", s"SELECT to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) AS time_to_month, " +
-				s"tcs.author_id, tt.tweets, COUNT ( tt.tweets ) AS freq " +
+			.option("query", s"SELECT tt.tweets, to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) AS time_to_month, " +
+				s"tcs.author_id, COUNT ( tt.tweets ) AS freq " +
 				s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
 				s"WHERE tcs.author_id = '${name}' AND " +
 				s"to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) BETWEEN  '${start}' and '${end}' GROUP BY " +
