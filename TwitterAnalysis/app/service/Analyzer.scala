@@ -1,8 +1,8 @@
 package service
 
 import _root_.spark.SparkIns
-import dao.{DAO, TweetImplDAO}
-import org.apache.spark.sql.functions.{col, explode, monotonically_increasing_id}
+import dao.TweetImplDAO
+import model.{TweetResult, TweetTimeResult}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import javax.inject.{Inject, Singleton}
@@ -10,37 +10,31 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO) extends AnalyzerBase {
 
-	def testRun(): Unit = {
-		val spark: SparkSession = sparkIns.spark
-		//		val path: String = ClassLoader.getSystemResource("/sample.csv").getPath
-		val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/sample.csv")
-		val result = super.preprocessing(df)
-		// save base table to database
+  def testRun(): Unit = {
+    val spark: SparkSession = sparkIns.spark
+    val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/sample.csv")
+    val result = super.preprocessing(df)
+    // save base table to database
+    tweetImplDAO.writeCustomerSupport(result)
+    // save second table with preprocessed_tweets to database
+    tweetImplDAO.writeTweets(result)
+  }
 
-		tweetImplDAO.writeCustomerSupport(result)
-		// save second table with preprocessed_tweets to database
-		tweetImplDAO.writeTweets(result)
-	}
+  def readByCompany(name: String) = {
+    val spark: SparkSession = sparkIns.spark
+    import spark.implicits._
+    val read_result = tweetImplDAO.readByCompanyName(name)
+    read_result.as[TweetResult].collect()
+  }
+
+  def readByTime(start: String, end: String, name: Option[String]) = {
+    val spark: SparkSession = sparkIns.spark
+    import spark.implicits._
+    val read_result: DataFrame = name match {
+      case Some(i) => tweetImplDAO.readByCompanyAndTime(i, start, end)
+      case None => tweetImplDAO.readByTime(start, end)
+    }
+    read_result.as[TweetTimeResult].collect()
+  }
+
 }
-
-// for quick test
-//object Analyzer extends AnalyzerBase with App {
-//	val spark: SparkSession = SparkSession
-//		.builder()
-//		.appName("TwitterAnalysis")
-//		.master("local[*]")
-//		.getOrCreate()
-//
-//	spark.sparkContext.setLogLevel("ERROR")
-//	val path: String = getClass.getResource("/sample.csv").getPath
-//	val df = spark.read.option("delimiter", ",").option("header", "true").csv(path)
-//	val result = super.preprocessing(df)
-//
-//	val base_df = result.select("tweet_id", "author_id", "created_at", "new_text")
-//	base_df.show(10, truncate = false)
-//
-//	val second_df = base_df.select(col("tweet_id").as("base_id"),
-//		explode(col("new_text")).as("tweets")).withColumn("id", monotonically_increasing_id())
-//	second_df.show(10, truncate = false)
-//
-//}
