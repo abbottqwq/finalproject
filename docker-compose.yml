@@ -12,6 +12,8 @@ services:
     build:
       context: Database
       dockerfile: Dockerfile.dev
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
 
   api:
     build:
@@ -38,7 +40,7 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
-  
+
   nginx:
     depends_on:
       - api
