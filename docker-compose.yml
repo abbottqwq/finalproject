@@ -14,7 +14,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./db-data:/var/lib/postgresql/data
-    command: sh -c './test_setup.sh'
 
   api:
     build:

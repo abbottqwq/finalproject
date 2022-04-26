@@ -55,7 +55,10 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 	}
 
 	def testDatabase(): Result = {
-		Try(sparkIns.readTable(TableName("test")).show()) match {
+		Try({
+			sparkIns.loadTest()
+			sparkIns.readTable(TableName("test")).show()
+		}) match {
 			case Success(_) => Ok(("Success" -> "1").toJson)
 			case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "Database connection fail", "Reason" -> f.toString).toJson)
 		}

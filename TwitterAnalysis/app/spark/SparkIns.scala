@@ -44,4 +44,9 @@ case class SparkIns @Inject()(config: Configuration) {
 		.option("user", config.getStringOption("SDB.user").getOrElse(""))
 		.option("password", config.getStringOption("SDB.password").getOrElse(""))
 
+	def loadTest() = {
+		val test = spark.createDataFrame(Seq(("test", 1)))
+		writeTable(test)(TableName("test")).mode(SaveMode.Overwrite)
+	}
+
 }
