@@ -60,45 +60,147 @@ make sure to run the init data api first to insert data
     ```json
     {"success": "1"}
     ```
-- select keywords by company name (you can use name=AppleSupport to test) `GET /selectByComp?name=XXX`  
-    ```json
-    {
-        "Success": "0",
-        "Data": [
-            {
-                "tweets": "ios",
-                "time_to_month": "2017-10",
-                "freq": "4"
-            },
-            {
-                "tweets": "latest",
-                "time_to_month": "2017-10",
-                "freq": "3"
-            }
-        ]
-    }
-    ```
-- select keywords by time period or company name or both `GET /selectByTime?start=2017-10-10&end=2017-10-11&name=AppleSupport`
- if you want to select by time period, request parameters will be start and end,
- if you want to select by both time period and company, you should add name to request parameters 
-    ```json
-    {
-        "Success": "0",
-        "Data": [
-            {
-                "tweets": "ios",
-                "time_to_month": "2017-10",
-                "author_id": "AppleSupport",
-                "freq": "4"
-            },
-            {
-                "tweets": "latest",
-                "time_to_month": "2017-10",
-                "author_id": "AppleSupport",
-                "freq": "3"
-            }
-        ]
-    }
-    ```
+note: offset and limit are optional, but they must show up together
+- select all `POST /selectAll`
 
+    request body
+    ```json
+    {
+        "offset": 1,
+        "limit": 2
+    }
+    ```
+    return
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            {
+                "tweets": "version",
+                "freq": "4"
+            },
+            {
+                "tweets": "phone",
+                "freq": "4"
+            }
+        ]
+    }
+    ```
+- select keywords by company name `POST /selectByComp`
+
+    request body
+    ```json 
+    {
+        "name": "AppleSupport",
+        "offset": 1,
+        "limit": 2
+    }
+    ```
+    return
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            {
+                "tweets": "ios",
+                "freq": "4"
+            },
+            {
+                "tweets": "latest",
+                "freq": "3"
+            }
+        ]
+    }
+    ```
+- select keywords by time period `POST /selectByTime`
+
+    request body
+    ```json 
+    {
+        "start": "2017-10-10",
+        "end": "2017-10-11",
+        "offset": 1,
+        "limit": 2
+    }
+    ```
+    return
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            {
+                "tweets": "version",
+                "freq": "4"
+            },
+            {
+                "tweets": "phone",
+                "freq": "4"
+            }
+        ]
+    }
+    ```
+- select keywords by time period and company `POST /selectByTimeAndComp`
+
+    request body
+    ```json 
+    {
+        "name": "AppleSupport"
+        "start": "2017-10-10",
+        "end": "2017-10-11",
+        "offset": 1,
+        "limit": 2
+    }
+    ```
+    return
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            {
+                "tweets": "version",
+                "freq": "4"
+            },
+            {
+                "tweets": "phone",
+                "freq": "4"
+            }
+        ]
+    }
+    ```
+- select company names `POST /selectCompanyName`
+    ```json
+    {
+        "Success": "1",
+        "Data": [
+            "AppleSupport",
+            "AmazonHelp",
+            "Uber_Support",
+            "Delta",
+            "SpotifyCares",
+            "Tesco",
+            "AmericanAir",
+            "comcastcares",
+            "TMobileHelp",
+            "British_Airways",
+            "SouthwestAir",
+            "Ask_Spectrum",
+            "hulu_support",
+            "ChipotleTweets",
+            "sprintcare",
+            "VirginTrains",
+            "AskPlayStation",
+            "XboxSupport",
+            "UPSHelp",
+            "sainsburys"
+        ]
+    }
+    ```
+- select time periods `POST /selectTimePeriod`
+    ```json
+    {
+        "Success": "1",
+        "Start_Date": "2017-10-10",
+        "End_Date": "2017-10-12"
+    }
+    ```
 
