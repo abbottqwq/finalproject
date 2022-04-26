@@ -12,6 +12,13 @@ services:
     build:
       context: Database
       dockerfile: Dockerfile.dev
+    environment:
+      - PGDATA=/var/lib/postgresql/data/db-files/
+    volumes:
+      - type: bind
+        source: ./db-data
+        target: /var/lib/postgresql/data
+
 
   api:
     build:
@@ -38,7 +45,7 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
-  
+
   nginx:
     depends_on:
       - api
