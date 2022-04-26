@@ -24,17 +24,22 @@ case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO) ex
     val spark: SparkSession = sparkIns.spark
     import spark.implicits._
     val read_result = tweetImplDAO.readByCompanyName(name)
-    read_result.as[TweetResult].collect()
+    read_result.map(x => Map("tweets" -> x(0).toString, "freq" -> x(1).toString)).collect()
   }
 
-  def readByTime(start: String, end: String, name: Option[String]) = {
+  def readByTime(start: String, end: String) = {
     val spark: SparkSession = sparkIns.spark
     import spark.implicits._
-    val read_result: DataFrame = name match {
-      case Some(i) => tweetImplDAO.readByCompanyAndTime(i, start, end)
-      case None => tweetImplDAO.readByTime(start, end)
-    }
-    read_result.as[TweetTimeResult].collect()
+    val read_result: DataFrame = tweetImplDAO.readByTime(start, end)
+    //read_result.as[TweetTimeResult].collect()
+    read_result.map(x => Map("tweets" -> x(0).toString, "time_to_month" -> x(1).toString, "freq" -> x(2).toString)).collect()
   }
 
+  def readByTimeAndCompany(start: String, end: String, name: String) = {
+    val spark: SparkSession = sparkIns.spark
+    import spark.implicits._
+    val read_result: DataFrame = tweetImplDAO.readByCompanyAndTime(name, start, end)
+    //read_result.as[TweetTimeResult].collect()
+    read_result.map(x => Map("tweets" -> x(0).toString, "time_to_month" -> x(1).toString, "author_id" -> x(2).toString, "freq" -> x(3).toString)).collect()
+  }
 }
