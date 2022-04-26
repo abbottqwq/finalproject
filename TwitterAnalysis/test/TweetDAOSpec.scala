@@ -1,5 +1,4 @@
-import dao.{DAO, TweetImplDAO}
-import org.apache.spark.sql.SparkSession
+import dao.TweetImplDAO
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
