@@ -85,4 +85,12 @@ class AnalyzerBase {
     result
   }
 
+  /**
+   * control the number of the dataset
+   */
+  def limitNumber(limit: Int, offset: Int, data: DataFrame) = {
+    data.withColumn("id", monotonically_increasing_id()).filter(col("id") > offset - 1)
+      .limit(limit).toDF().drop("id")
+  }
+
 }

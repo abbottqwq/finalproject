@@ -26,11 +26,23 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 		}
 	}
 
-	def selectByCompanyName(name: String) = Action {
-		implicit request: Request[AnyContent] => {
-			Try(analyzer.readByCompany(name)) match {
-				case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
-				case Failure(f) => BadRequest(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
+	def selectByCompanyName() = Action(parse.json) {
+		implicit request => {
+			request.body match {
+				case JsObject(fields) =>
+					fields.get("name") match {
+						case Some(named) =>
+							Try({
+								val company_name = named.as[String]
+								analyzer.readByCompany(company_name, fields.get("limit").flatMap(x => x.asOpt[Int]),
+									fields.get("offset").flatMap(x => x.asOpt[Int]))
+							}) match {
+								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
+							}
+						case None => BadRequest("missing name")
+					}
+				case _ => BadRequest("data error")
 			}
 		}
 	}
@@ -39,45 +51,47 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 		implicit request => {
 			request.body match {
 				case JsObject(fields) =>
-					(fields.get("start"), fields.get("end"), fields.get("name")) match {
-						case (Some(startJS), Some(endJS), nameO) =>
-							val name = nameO match {
-								case Some(n) => Option(n.as[String])
-								case None => None
-							}
+					(fields.get("start"),fields.get("end")) match {
+						case (Some(start0), Some(end0)) =>
 							Try({
-								val start = startJS.as[String]
-								val end = endJS.as[String]
-								println(start, end)
-								analyzer.readByTime(start, end, name)
+								val start_time = start0.as[String]
+								val end_time = end0.as[String]
+								analyzer.readByTime(start_time, end_time, fields.get("limit").flatMap(x => x.asOpt[Int]),
+									fields.get("offset").flatMap(x => x.asOpt[Int]))
 							}) match {
 								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
 								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
 							}
-						case (None, Some(_), _) => BadRequest("missing start")
-						case (Some(_), None, _) => BadRequest("missing end")
+						case (Some(_), None) => BadRequest("missing end")
+						case (None, Some(_)) => BadRequest("missing start")
+						case _ => BadRequest("missing start and end")
+					}
+				case _ => BadRequest("data error")
+			}
+		}
+	}
+
+	def selectByTimeAndCompany() = Action(parse.json) {
+		implicit request => {
+			request.body match {
+				case JsObject(fields) =>
+					(fields.get("start"),fields.get("end"), fields.get("name")) match {
+						case (Some(start0), Some(end0), Some(name0)) =>
+							Try({
+								val start_time = start0.as[String]
+								val end_time = end0.as[String]
+								val named = name0.as[String]
+								analyzer.readByTimeAndCompany(start_time, end_time,named, fields.get("limit").flatMap(x => x.asOpt[Int]),
+									fields.get("offset").flatMap(x => x.asOpt[Int]))
+							}) match {
+								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
+							}
+						case (_, _, None) => BadRequest("missing name")
+						case (None, _, _) => BadRequest("missing start")
+						case (_, None, _) => BadRequest("missing end")
 						case _ => BadRequest("missing data")
 					}
-
-  def selectByTime(start: String, end: String) = Action {
-    implicit request: Request[AnyContent] => {
-      val result = analyzer.readByTime(start, end)
-      Try(result) match {
-        case Success(_) => Ok(Json.obj("Success" -> "0", "Data" -> result))
-        case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
-      }
-    }
-  }
-
-  def selectByTimeAndCompany(start: String, end: String, name: String) = Action {
-    implicit request: Request[AnyContent] => {
-      val result = analyzer.readByTimeAndCompany(start, end, name)
-      Try(result) match {
-        case Success(_) => Ok(Json.obj("Success" -> "0", "Data" -> result))
-        case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
-      }
-    }
-  }
 				case _ => BadRequest("data error")
 			}
 		}
@@ -85,9 +99,41 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 
 	def selectCompanyNames() = Action {
 		implicit request: Request[AnyContent] => {
-			Try(analyzer.getCompanyName()) match {
+			val result = analyzer.getCompanyName()
+			Try(result) match {
 				case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
 				case Failure(f) => BadRequest(Map("Success" -> "0", "Error" -> "get company name fail", "Reason" -> f.toString).toJson)
+			}
+		}
+	}
+
+	def selectTimePeriod() = Action {
+		implicit request: Request[AnyContent] => {
+			val result = analyzer.selectTimePeriod()
+			Try(result) match {
+				case Success(result) => Ok(Map("Success" -> "1", "Start_Date" -> result._1, "End_Date" -> result._2).toJson)
+				case Failure(f) => BadRequest(Map("Success" -> "0", "Error" -> "get company name fail", "Reason" -> f.toString).toJson)
+			}
+		}
+	}
+
+	def selectAll() = Action {
+		implicit request => {
+			request.body.asJson match {
+				case Some(x) =>
+					Try({
+						analyzer.selectAll((x \ "limit").asOpt[Int], (x \ "offset").asOpt[Int])
+					}) match {
+						case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+						case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
+					}
+				case None =>
+					Try({
+						analyzer.selectAll(None, None)
+					}) match {
+						case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+						case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
+					}
 			}
 		}
 	}

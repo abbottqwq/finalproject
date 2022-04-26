@@ -7,10 +7,13 @@
 GET        /                   controllers.HomeController.index()
 GET        /test               controllers.TestController.test(action="testconnect")
 GET        /test/:action       controllers.TestController.test(action)
+
 POST       /initdata           controllers.HomeController.initData()
-GET        /selectByComp       controllers.HomeController.selectByCompanyName(name)
-# GET        /selectByTime       controllers.HomeController.selectByTime(start:String, end:String, name:Option[String])
+POST       /selectByComp       controllers.HomeController.selectByCompanyName()
 POST       /selectByTime       controllers.HomeController.selectByTime()
+POST       /selectByTimeAndComp  controllers.HomeController.selectByTimeAndCompany()
 POST       /selectCompanyName  controllers.HomeController.selectCompanyNames()
+POST       /selectTimePeriod   controllers.HomeController.selectTimePeriod()
+POST       /selectAll          controllers.HomeController.selectAll()
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)
