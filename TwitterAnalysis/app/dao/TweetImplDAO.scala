@@ -29,10 +29,10 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	def readByCompanyName(name: String): DataFrame = {
 		sparkIns.loadRead()
 			.option("query", s"SELECT tt.tweets,to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) AS time_to_month," +
-				s"COUNT ( tt.tweets ) AS freq FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
-				s"WHERE tcs.author_id = '${name}' GROUP BY " +
-				s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) ,tt.tweets " +
-				s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), freq desc")
+							s"COUNT ( tt.tweets ) AS freq FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
+							s"WHERE tcs.author_id = '${name}' GROUP BY " +
+							s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) ,tt.tweets " +
+							s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), freq desc")
 			.load()
 	}
 
@@ -42,11 +42,10 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	def readByTime(start: String, end: String): DataFrame = {
 		sparkIns.loadRead()
 			.option("query", s"SELECT tt.tweets,to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) AS time_to_month," +
-							s"tcs.author_id," +
 							s"COUNT ( tt.tweets ) AS freq FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
 							s"WHERE to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) BETWEEN  '${start}' and '${end}' GROUP BY " +
-							s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) , tcs.author_id, tt.tweets " +
-							s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), tcs.author_id, freq desc")
+							s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), tt.tweets " +
+							s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), freq desc")
 			.load()
 	}
 
@@ -56,12 +55,12 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	def readByCompanyAndTime(name: String, start: String, end: String): DataFrame = {
 		sparkIns.loadRead()
 			.option("query", s"SELECT tt.tweets, to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) AS time_to_month, " +
-				s"tcs.author_id, COUNT ( tt.tweets ) AS freq " +
-				s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
-				s"WHERE tcs.author_id = '${name}' AND " +
-				s"to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) BETWEEN  '${start}' and '${end}' GROUP BY " +
-				s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) , tcs.author_id, tt.tweets " +
-				s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), tcs.author_id, freq desc")
+							s"tcs.author_id, COUNT ( tt.tweets ) AS freq " +
+							s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
+							s"WHERE tcs.author_id = '${name}' AND " +
+							s"to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) BETWEEN  '${start}' and '${end}' GROUP BY " +
+							s"to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ) , tcs.author_id, tt.tweets " +
+							s"ORDER BY to_char(to_date( tcs.created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ),'YYYY-MM' ), tcs.author_id, freq desc")
 			.load()
 	}
 

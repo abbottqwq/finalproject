@@ -61,6 +61,25 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration, 
 						case _ => BadRequest("missing data")
 					}
 
+  def selectByTime(start: String, end: String) = Action {
+    implicit request: Request[AnyContent] => {
+      val result = analyzer.readByTime(start, end)
+      Try(result) match {
+        case Success(_) => Ok(Json.obj("Success" -> "0", "Data" -> result))
+        case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
+      }
+    }
+  }
+
+  def selectByTimeAndCompany(start: String, end: String, name: String) = Action {
+    implicit request: Request[AnyContent] => {
+      val result = analyzer.readByTimeAndCompany(start, end, name)
+      Try(result) match {
+        case Success(_) => Ok(Json.obj("Success" -> "0", "Data" -> result))
+        case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
+      }
+    }
+  }
 				case _ => BadRequest("data error")
 			}
 		}
