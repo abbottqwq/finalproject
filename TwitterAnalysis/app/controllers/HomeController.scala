@@ -19,7 +19,7 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 
 	def initData() = Action {
 		implicit request: Request[AnyContent] => {
-			Try(analyzer.testRun()) match {
+			Try(analyzer.init_data()) match {
 				case Success(_) => Ok(Map("Success" -> "1").toJson)
 				case Failure(f) => InternalServerError(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
 			}
@@ -34,8 +34,12 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 						case Some(named) =>
 							Try({
 								val company_name = named.as[String]
-								analyzer.readByCompany(company_name, fields.get("limit").flatMap(x => x.asOpt[Int]),
+								val start = System.nanoTime()
+								val result = analyzer.readByCompany(company_name, fields.get("limit").flatMap(x => x.asOpt[Int]),
 									fields.get("offset").flatMap(x => x.asOpt[Int]))
+								val duration = (System.nanoTime() - start) / 1000000000
+								println(s"selectByCompanyName run time is: ${duration}s")
+								result
 							}) match {
 								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
 								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
@@ -56,8 +60,12 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 							Try({
 								val start_time = start0.as[String]
 								val end_time = end0.as[String]
-								analyzer.readByTime(start_time, end_time, fields.get("limit").flatMap(x => x.asOpt[Int]),
+								val start = System.nanoTime()
+								val result = analyzer.readByTime(start_time, end_time, fields.get("limit").flatMap(x => x.asOpt[Int]),
 									fields.get("offset").flatMap(x => x.asOpt[Int]))
+								val duration = (System.nanoTime() - start) / 1000000000
+								println(s"selectByTime run time is: ${duration}s")
+								result
 							}) match {
 								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
 								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
@@ -81,8 +89,12 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 								val start_time = start0.as[String]
 								val end_time = end0.as[String]
 								val named = name0.as[String]
-								analyzer.readByTimeAndCompany(start_time, end_time,named, fields.get("limit").flatMap(x => x.asOpt[Int]),
+								val start = System.nanoTime()
+								val result = analyzer.readByTimeAndCompany(start_time, end_time,named, fields.get("limit").flatMap(x => x.asOpt[Int]),
 									fields.get("offset").flatMap(x => x.asOpt[Int]))
+								val duration = (System.nanoTime() - start) / 1000000000
+								println(s"selectByTimeAndCompany run time is: ${duration}s")
+								result
 							}) match {
 								case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
 								case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
