@@ -25,11 +25,7 @@ class AnalyzerBase {
     val df_with_company = df_transformer
       .withColumn("author_id", regexp_replace(col("author_id"), "@", ""))
 
-    // keep Top20 companies
-    val list = List("AppleSupport","AmazonHelp","Uber_Support","Delta","SpotifyCares","Tesco","AmericanAir","comcastcares"
-    ,"TMobileHelp","British_Airways","SouthwestAir","Ask_Spectrum","hulu_support","ChipotleTweets","sprintcare","VirginTrains"
-    ,"AskPlayStation","XboxSupport","UPSHelp","sainsburys")
-    val df_filter_company = df_with_company.filter(col("author_id").isin(list: _*))
+    val df_filter_company = df_with_company.filter(col("author_id").isin(company_list: _*))
     // clean data, trim + remove urls
     val cleaned_df = df_filter_company.withColumn("text",
       regexp_replace(trim(col("text")),

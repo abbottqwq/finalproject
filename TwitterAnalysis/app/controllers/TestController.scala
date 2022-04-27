@@ -66,7 +66,7 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 	}
 
 	def testPreProcess(): Result = {
-		Try(analyzer.testRun()) match {
+		Try(analyzer.init_data()) match {
 			case Success(_) => Ok(("Success" -> "1").toJson)
 			case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
 		}

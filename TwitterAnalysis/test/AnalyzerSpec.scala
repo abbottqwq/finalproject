@@ -31,7 +31,11 @@ class AnalyzerSpec extends PlaySpec {
 			spark.sparkContext.setLogLevel("ERROR")
 			val path: String = getClass.getResource("sample.csv").getPath
 			val df = spark.read.option("delimiter", ",").option("header", "true").csv(path)
+			val start = System.nanoTime()
 			val result = ab.preprocessing(df)
+			val end = System.nanoTime()
+			val duration = (end - start) / 1000000000
+			println(s"preprocessing run time:${duration}s")
 			Try(result.select("new_text").show(5)) mustBe a[Success[_]]
 		}
 	}
