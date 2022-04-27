@@ -62,5 +62,13 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 			.load()
 	}
 
-
+	/**
+	* get Top 20 Company
+		*/
+	def getTop20Company: DataFrame = {
+		sparkIns.loadRead()
+			.option("query", s"SELECT tcs.author_id, COUNT ( tcs.author_id ) AS freq FROM t_customer_support tcs " +
+				s"GROUP BY tcs.author_id ORDER BY freq desc Limit 20")
+			.load()
+	}
 }
