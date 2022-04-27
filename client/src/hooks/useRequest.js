@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function useRequest() {
+export default function useRequest(url, method) {
 	const [res, setRes] = useState(null);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const header = { "Content-Type": "application/json" };
 
-	async function request(url, method, data) {
+	async function request(data) {
 		setLoading(true);
+		// console.log(url, method ? method : "POST", data);
 		await axios({
 			method: method,
 			url: url,
