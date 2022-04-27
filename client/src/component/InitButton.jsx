@@ -4,9 +4,9 @@ import useRequest from "../hooks/useRequest";
 import urls from "../config/api";
 
 export function InitButton() {
-	const [res, error, loading, request] = useRequest();
+	const [res, error, loading, request] = useRequest(urls.initData, "POST");
 	const onClickFun = () => {
-		request(urls.initData, "POST");
+		request();
 	};
 	useEffect(() => {
 		if (res) console.log(res);
