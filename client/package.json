@@ -14,7 +14,9 @@
 		"moment": "2.29.3",
 		"axios": "0.26.1",
 		"victory": "36.3.2",
-		"lodash": "4.17.21"
+		"lodash": "4.17.21",
+		"react-vis": "1.11.7",
+		"react-wordcloud": "1.2.7"
 	},
 	"scripts": {
 		"start": "react-scripts start",

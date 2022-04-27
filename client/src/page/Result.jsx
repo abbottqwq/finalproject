@@ -70,8 +70,17 @@ function ResultPage() {
 				companyNames={companyNames}
 				setCompanyName={setCompanyName}
 			/>
-			<InputScaler setLimit={setLimit} setOffset={setOffset} />
-			<SubmitButton onClick={onClickFun} loading={loading} />
+			<InputScaler
+				setLimit={setLimit}
+				setOffset={setOffset}
+				defaultOffset={0}
+				defaultLimit={10}
+				offsetRange={[0, 50]}
+				limitRange={[0, 30]}
+			/>
+			<SubmitButton onClick={onClickFun} loading={loading}>
+				Submit
+			</SubmitButton>
 
 			<ReloadButton
 				setCompanyNames={setCompanyNames}

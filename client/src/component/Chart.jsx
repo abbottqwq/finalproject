@@ -3,7 +3,7 @@ import { VictoryPie, VictoryTheme } from "victory";
 import _ from "lodash";
 export function Chart({ data }) {
 	return (
-		<div style={{ width: "50%", height: "auto", overflow: "scroll" }}>
+		<div style={{ width: "50%", height: "auto" }}>
 			<VictoryPie
 				width={450}
 				theme={VictoryTheme.material}
