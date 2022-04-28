@@ -1,6 +1,7 @@
 package dao
 
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.functions._
 import spark.SparkIns
 
 import javax.inject.{Inject, Singleton}
@@ -13,12 +14,21 @@ class CustomerSupportDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	sparkIns.spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
 
 	def selectTimePeriod(): DataFrame = {
-		sparkIns.spark.sql(s"SELECT MIN( to_date( created_at, 'E MMM dd HH:mm:ss Z yyyy' ) ) as start_time," +
-				s"MAX ( to_date( created_at, 'E MMM dd HH:mm:ss Z yyyy' ) ) as end_time FROM t_customer_support")
+		val df_cs = sparkIns.spark.table("t_customer_support")
+		df_cs
+			.agg(min(to_date(col("created_at"), "E MMM dd HH:mm:ss Z yyyy")) as "start_time"
+				, max(to_date(col("created_at"), "E MMM dd HH:mm:ss Z yyyy")) as "end_time")
+			.toDF()
 	}
 
 	def selectAll(): DataFrame = {
-		sparkIns.spark.sql(s"SELECT tt.tweets, COUNT ( tt.tweets ) AS freq " +
-				s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id GROUP BY tt.tweets ORDER BY freq DESC")
+		val df_tweet = sparkIns.spark.table("t_tweets")
+		val df_cs = sparkIns.spark.table("t_customer_support")
+		df_tweet
+			.join(df_cs, df_tweet.col("base_id") === df_cs.col("tweet_id"), "left_outer")
+			.groupBy("tweets")
+			.agg(count("*") as "freq")
+			.orderBy(col("freq").desc)
+			.toDF()
 	}
 }
