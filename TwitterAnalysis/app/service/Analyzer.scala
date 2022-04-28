@@ -2,6 +2,7 @@ package service
 
 import _root_.spark.SparkIns
 import dao.{CustomerSupportDAO, TweetImplDAO}
+import org.apache.spark.sql.functions.{col, explode, monotonically_increasing_id}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import javax.inject.{Inject, Singleton}
@@ -14,10 +15,17 @@ case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO, cu
     val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/sample.csv")
 
     val result = super.preprocessing(df)
+    // save to spark
+    val base_df = result.select("tweet_id", "author_id", "created_at", "new_text")
+    base_df.createOrReplaceTempView("t_customer_support")
+    val second_df = result.select(col("tweet_id").as("base_id"),
+      explode(col("new_text")).as("tweets")).withColumn("id", monotonically_increasing_id())
+    second_df.createOrReplaceTempView("t_tweets")
+
     // save base table to database
-    tweetImplDAO.writeCustomerSupport(result)
+//    tweetImplDAO.writeCustomerSupport(result)
     // save second table with preprocessed_tweets to database
-    tweetImplDAO.writeTweets(result)
+//    tweetImplDAO.writeTweets(result)
 
   }
 

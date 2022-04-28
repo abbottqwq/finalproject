@@ -3,7 +3,7 @@ package controllers
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import service.Analyzer
-import utils.helper.ErrorReturn
+import utils.helper.{DateTransformer, ErrorReturn}
 import utils.implicits.MyToJson._
 
 import javax.inject._
@@ -58,8 +58,9 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 					(fields.get("start"),fields.get("end")) match {
 						case (Some(start0), Some(end0)) =>
 							Try({
-								val start_time = start0.as[String]
-								val end_time = end0.as[String]
+								val transformer = DateTransformer()
+								val start_time = transformer.transform(start0.as[String])
+								val end_time = transformer.transform(end0.as[String])
 								val start = System.nanoTime()
 								val result = analyzer.readByTime(start_time, end_time, fields.get("limit").flatMap(x => x.asOpt[Int]),
 									fields.get("offset").flatMap(x => x.asOpt[Int]))
@@ -86,8 +87,9 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 					(fields.get("start"),fields.get("end"), fields.get("name")) match {
 						case (Some(start0), Some(end0), Some(name0)) =>
 							Try({
-								val start_time = start0.as[String]
-								val end_time = end0.as[String]
+								val transformer = DateTransformer()
+								val start_time = transformer.transform(start0.as[String])
+								val end_time = transformer.transform(end0.as[String])
 								val named = name0.as[String]
 								val start = System.nanoTime()
 								val result = analyzer.readByTimeAndCompany(start_time, end_time,named, fields.get("limit").flatMap(x => x.asOpt[Int]),

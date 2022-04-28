@@ -10,17 +10,15 @@ class CustomerSupportDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	override implicit val tableName: TableName = TableName("t_customer_support")
 	override implicit val si: SparkIns = sparkIns
 
+	sparkIns.spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
+
 	def selectTimePeriod(): DataFrame = {
-		sparkIns.loadRead()
-			.option("query", s"SELECT MIN( to_date( created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) ) as start_time," +
-				s"MAX ( to_date( created_at, 'Dy Mon dd HH24:MI:SS +ZZZZ yyyy' ) ) as end_time FROM t_customer_support")
-			.load()
+		sparkIns.spark.sql(s"SELECT MIN( to_date( created_at, 'E MMM dd HH:mm:ss Z yyyy' ) ) as start_time," +
+				s"MAX ( to_date( created_at, 'E MMM dd HH:mm:ss Z yyyy' ) ) as end_time FROM t_customer_support")
 	}
 
 	def selectAll(): DataFrame = {
-		sparkIns.loadRead()
-			.option("query", s"SELECT tt.tweets, COUNT ( tt.tweets ) AS freq " +
+		sparkIns.spark.sql(s"SELECT tt.tweets, COUNT ( tt.tweets ) AS freq " +
 				s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id GROUP BY tt.tweets ORDER BY freq DESC")
-			.load()
 	}
 }
