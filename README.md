@@ -172,28 +172,36 @@ note: offset and limit are optional, but they must show up together
     {
         "Success": "1",
         "Data": [
-            "AppleSupport",
-            "AmazonHelp",
-            "Uber_Support",
-            "Delta",
-            "SpotifyCares",
-            "Tesco",
-            "AmericanAir",
-            "comcastcares",
-            "TMobileHelp",
-            "British_Airways",
-            "SouthwestAir",
-            "Ask_Spectrum",
-            "hulu_support",
-            "ChipotleTweets",
-            "sprintcare",
-            "VirginTrains",
-            "AskPlayStation",
-            "XboxSupport",
-            "UPSHelp",
-            "sainsburys"
+            {
+                "author_id": "AppleSupport",
+                "freq": "91"
+            },
+            {
+                "author_id": "SpotifyCares",
+                "freq": "61"
+            },
+            {
+                "author_id": "Tesco",
+                "freq": "45"
+            },
+            {
+                "author_id": "VirginTrains",
+                "freq": "42"
+            },
+            {
+                "author_id": "Ask_Spectrum",
+                "freq": "10"
+            },
+            {
+                "author_id": "British_Airways",
+                "freq": "10"
+            },
+            {
+                "author_id": "SouthwestAir",
+                "freq": "2"
+            }
         ]
-    }
+    }           
     ```
 - select time periods `POST /selectTimePeriod`
     ```json
