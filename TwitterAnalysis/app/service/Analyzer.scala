@@ -60,7 +60,10 @@ case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO, cu
 	}
 
   def getCompanyName() = {
-    super.company_list
+    val spark: SparkSession = sparkIns.spark
+    import spark.implicits._
+    val ti = tweetImplDAO.getTop20Company
+    ti.map(x => Map("author_id" -> x(0).toString, "freq" -> x(1).toString)).collect()
   }
 
   def selectTimePeriod() = {
