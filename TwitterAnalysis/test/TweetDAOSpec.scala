@@ -18,7 +18,7 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 			"SDB.driver" -> "org.postgresql.Driver",
 			"SDB.url" -> "jdbc:postgresql:postgres",
 			"SDB.user" -> "postgres",
-			"SDB.password" -> "xiaoyi2008",
+			"SDB.password" -> "postgres",
 			"SPARK_MASTER" -> "local[*]",
 			"SPARK_APP_NAME" -> "PostgreSQL 14"
 		)
