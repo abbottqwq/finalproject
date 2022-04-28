@@ -13,8 +13,6 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	override implicit val si = sparkIns
 
 	sparkIns.spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
-//	val df_tweet = sparkIns.spark.table("t_tweets")
-//	val df_cs = sparkIns.spark.table("t_customer_support")
 
 	def writeCustomerSupport(df: DataFrame): Unit = {
 		val base_df = df.select("tweet_id", "author_id", "created_at", "new_text")
@@ -34,22 +32,21 @@ class TweetImplDAO @Inject()(sparkIns: SparkIns) extends DAO {
 	 * get keywords from specific company sort by frequency
 	 */
 	def readByCompanyName(name: String): DataFrame = {
-		sparkIns.spark.sql(s"SELECT tt.tweets, COUNT ( tt.tweets ) AS freq " +
-				s"FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
-				s"WHERE tcs.author_id = '${name}' GROUP BY tt.tweets ORDER BY freq DESC")
+		val df_tweet = sparkIns.spark.table("t_tweets")
+		val df_cs = sparkIns.spark.table("t_customer_support")
+		df_tweet
+			.join(df_cs, df_tweet.col("base_id") === df_cs.col("tweet_id"), "left_outer")
+			.where(col("author_id") === name)
+			.groupBy("tweets")
+			.agg(count("*") as "freq")
+			.orderBy(col("freq").desc)
+			.toDF()
 	}
 
 	/**
 	 * get keywords from a time period sort by frequency
 	 */
 	def readByTime(start: String, end: String): DataFrame = {
-//		sparkIns.spark.sql(s"SELECT tt.tweets, " +
-//									s"COUNT ( tt.tweets ) AS freq FROM t_customer_support tcs LEFT JOIN t_tweets tt ON tcs.tweet_id = tt.base_id " +
-//									s"WHERE to_date( tcs.created_at, 'E MMM dd HH:mm:ss Z yyyy' ) >= '${start}' " +
-//									s"and to_date( tcs.created_at, 'E MMM dd HH:mm:ss Z yyyy' ) < '${end}' GROUP BY " +
-//									s"tt.tweets " +
-//									s"ORDER BY freq desc")
-
 		val df_tweet = sparkIns.spark.table("t_tweets")
 		val df_cs = sparkIns.spark.table("t_customer_support")
 		df_tweet
