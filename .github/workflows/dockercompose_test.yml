@@ -18,11 +18,11 @@ jobs:
     - name: Build the Docker compose
       run: |
         cp .env.example .env
-        docker-compose up -d --build
+        docker-compose up -d 
         
     - name: Wait the container to be stable
       run: |
-        sleep 60s
+        sleep 120s
         docker ps -a
       shell: bash
       
