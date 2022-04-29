@@ -4,7 +4,7 @@ import ReactWordcloud from "react-wordcloud";
 
 export function WordCloud(data) {
 	const options = {
-		enableTooltip: true,
+		enableTooltip: false,
 		deterministic: true,
 		fontFamily: "impact",
 		fontSizes: [5, 60],

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { VictoryPie, VictoryTheme } from "victory";
 import _ from "lodash";
 export function Chart({ data }) {
+	// console.log(data);
 	return (
-		<div style={{ width: "50%", height: "auto" }}>
+		<div style={{ width: "50%", height: "auto", labels: { padding: -20 } }}>
 			<VictoryPie
 				width={450}
 				theme={VictoryTheme.material}

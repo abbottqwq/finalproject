@@ -59,7 +59,6 @@ function ResultPage() {
 
 	return (
 		<>
-			<InitButton />
 			<Chart data={data} />
 			<InputDate
 				start={timePeriod.start}

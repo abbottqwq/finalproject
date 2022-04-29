@@ -20,3 +20,4 @@ test_script/__pycache__
 client/build
 db-data/*
 !db-data/test.md
+TwitterAnalysis/spark-warehouse

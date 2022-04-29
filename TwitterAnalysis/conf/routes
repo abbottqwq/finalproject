@@ -15,5 +15,6 @@ POST       /selectByTimeAndComp  controllers.HomeController.selectByTimeAndCompa
 POST       /selectCompanyName  controllers.HomeController.selectCompanyNames()
 POST       /selectTimePeriod   controllers.HomeController.selectTimePeriod()
 POST       /selectAll          controllers.HomeController.selectAll()
+# POST       /selectByWeekAndComp controllers.HomeController.selectByWeekAndComp()
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)
