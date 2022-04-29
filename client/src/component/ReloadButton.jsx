@@ -4,7 +4,12 @@ import { ReloadOutlined } from "@ant-design/icons";
 import useRequest from "../hooks/useRequest";
 import urls from "../config/api";
 
-export function ReloadButton({ setCompanyNames, setTimePeriod, setDataEmpty }) {
+export function ReloadButton({
+	setCompanyNames,
+	setTimePeriod,
+	setDataEmpty,
+	isGetOnLoad = true,
+}) {
 	const [res_Comp, error_Comp, loading_Comp, request_Comp] = useRequest(
 		urls.selectCompanyName,
 		"POST"
@@ -18,7 +23,12 @@ export function ReloadButton({ setCompanyNames, setTimePeriod, setDataEmpty }) {
 
 	useEffect(() => {
 		if (res_Comp) {
-			setCompanyNames(res_Comp.Data.map((c) => [{ value: c }][0]));
+			// console.log(res_Comp.Data);
+			setCompanyNames(
+				res_Comp.Data.map(
+					(c) => [{ value: c.author_id, freq: parseInt(c.freq) }][0]
+				)
+			);
 		}
 		if (res_timePeriod) {
 			setTimePeriod({
@@ -47,7 +57,7 @@ export function ReloadButton({ setCompanyNames, setTimePeriod, setDataEmpty }) {
 	};
 
 	useEffect(() => {
-		onClick();
+		if (isGetOnLoad) onClick();
 	}, []);
 
 	return (

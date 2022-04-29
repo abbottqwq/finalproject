@@ -3,6 +3,7 @@ package controllers
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import service.Analyzer
+import spark.SparkIns
 import utils.helper.{DateTransformer, ErrorReturn}
 import utils.implicits.MyToJson._
 
@@ -10,7 +11,8 @@ import javax.inject._
 import scala.language.postfixOps
 import scala.util._
 
-class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer, sparkIns: SparkIns) extends AbstractController(cc) {
+	val spark = sparkIns.spark
 	def index() = Action {
 		implicit request: Request[AnyContent] => {
 			Ok("hello world!")
@@ -55,7 +57,7 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 		implicit request => {
 			request.body match {
 				case JsObject(fields) =>
-					(fields.get("start"),fields.get("end")) match {
+					(fields.get("start"), fields.get("end")) match {
 						case (Some(start0), Some(end0)) =>
 							Try({
 								val transformer = DateTransformer()
@@ -80,11 +82,34 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 		}
 	}
 
+	//(name: String, limit: Int, offset: Int)
+	//	def selectByWeekAndComp() = Action(parse.json) { implicit request => {
+	//		request.body match {
+	//			case JsObject(fields) =>
+	//				(fields.get("name"), fields.get("limit"), fields.get("offset")) match {
+	//					case (Some(name0), Some(limit0), Some(offset0)) =>
+	//						Try({
+	//							analyzer.selectByWeekAndComp(name0.as[String], limit0.as[Int], offset0.as[Int])
+	//
+	//						}) match {
+	//							case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+	//							case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
+	//						}
+	//					case (None, Some(_), Some(_)) => BadRequest("missing name")
+	//					case (Some(_), None, Some(_)) => BadRequest("missing limit")
+	//					case (Some(_), Some(_), None) => BadRequest("missing offset")
+	//					case _ => BadRequest("missing data")
+	//				}
+	//			case _ => BadRequest("data error")
+	//		}
+	//	}
+	//	}
+
 	def selectByTimeAndCompany() = Action(parse.json) {
 		implicit request => {
 			request.body match {
 				case JsObject(fields) =>
-					(fields.get("start"),fields.get("end"), fields.get("name")) match {
+					(fields.get("start"), fields.get("end"), fields.get("name")) match {
 						case (Some(start0), Some(end0), Some(name0)) =>
 							Try({
 								val transformer = DateTransformer()
@@ -92,7 +117,7 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 								val end_time = transformer.transform(end0.as[String])
 								val named = name0.as[String]
 								val start = System.nanoTime()
-								val result = analyzer.readByTimeAndCompany(start_time, end_time,named, fields.get("limit").flatMap(x => x.asOpt[Int]),
+								val result = analyzer.readByTimeAndCompany(start_time, end_time, named, fields.get("limit").flatMap(x => x.asOpt[Int]),
 									fields.get("offset").flatMap(x => x.asOpt[Int]))
 								val duration = (System.nanoTime() - start) / 1000000000
 								println(s"selectByTimeAndCompany run time is: ${duration}s")
@@ -131,8 +156,10 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 		}
 	}
 
+
 	def selectAll() = Action {
 		implicit request => {
+
 			request.body.asJson match {
 				case Some(x) =>
 					Try({
@@ -145,7 +172,7 @@ class HomeController @Inject()(cc: ControllerComponents, analyzer: Analyzer) ext
 					Try({
 						analyzer.selectAll(None, None)
 					}) match {
-						case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result))
+						case Success(result) => Ok(Json.obj("Success" -> "1", "Data" -> result.toJson))
 						case Failure(f) => InternalServerError(ErrorReturn("get data fail", f).toJson)
 					}
 			}

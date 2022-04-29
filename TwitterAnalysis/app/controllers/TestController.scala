@@ -1,6 +1,6 @@
 package controllers
 
-import dao.TableName
+import dao.{TableName, TweetImplDAO}
 import play.api._
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
@@ -18,7 +18,7 @@ import scala.util._
  * application's home page.
  */
 @Singleton
-class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, analyzer: Analyzer) extends AbstractController(cc) {
+class TestController @Inject()(cc: ControllerComponents, config: Configuration, sparkIns: SparkIns, analyzer: Analyzer, tweetImplDAO: TweetImplDAO) extends AbstractController(cc) {
 
 	def test(action: String) = Action {
 		implicit request: Request[AnyContent] => {
@@ -35,6 +35,7 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 								case Failure(f) => Ok(Map("Success" -> "0", "error" -> "stop spark fail", "reason" -> f.toString).toJson)
 							}
 						case "testpreprocess" => testPreProcess()
+						case "other" => othrtStuff()
 						case _ => NotFound("No Such Test")
 					}
 			}
@@ -71,4 +72,10 @@ class TestController @Inject()(cc: ControllerComponents, config: Configuration, 
 			case Failure(f) => Ok(Map("Success" -> "0", "Error" -> "preprocess test fail", "Reason" -> f.toString).toJson)
 		}
 	}
+
+	def othrtStuff() = {
+		tweetImplDAO.getByCompWeek("AmazonHelp", 6, 10)
+		Ok("")
+	}
+
 }
