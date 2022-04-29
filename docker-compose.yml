@@ -29,8 +29,8 @@ services:
       - postgres
     env_file:
       - .env
-    ports:
-      - "9000:9000"
+#    ports:
+#      - "9000:9000"
     volumes:
       - web_data:/twitteranalysis/resources
       - ./TwitterAnalysis:/twitteranalysis
