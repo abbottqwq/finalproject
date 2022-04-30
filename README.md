@@ -3,8 +3,11 @@
 # finalproject
 ## about the project
 > before running, remember to **RENAME .env.example to .env**
+
 > if you want to use the original dataset, download the datasource to /TwitterAnalysis/resources
+
 > if you want to init data more than once, make sure to delete the spark-warehouse automatically created in local first
+
 > if you have any issue with the UI, you can use Postman to test APIs below
 
 ### using docker
@@ -21,6 +24,7 @@
 ## dependencies
 - postgresql with the latest version
 - Node.js >= 14.0.0
+- docker with the latest version if you want
 
 ## core structure
 - /TwitterAnalysis back-end system with Play, PostgreSQL and Spark
