@@ -1,8 +1,12 @@
 [![Docker Compose CI](https://github.com/abbottqwq/finalproject/actions/workflows/dockercompose_test.yml/badge.svg)](https://github.com/abbottqwq/finalproject/actions/workflows/dockercompose_test.yml)
 [![Scala CI](https://github.com/abbottqwq/finalproject/actions/workflows/scala.yml/badge.svg)](https://github.com/abbottqwq/finalproject/actions/workflows/scala.yml)
 # finalproject
-## test the project
+## about the project
 > before running, remember to **RENAME .env.example to .env**
+> if you want to use the original dataset, download the datasource to /TwitterAnalysis/resources
+> if you want to init data more than once, make sure to delete the spark-warehouse automatically created in local first
+> if you have any issue with the UI, you can use Postman to test APIs below
+
 ### using docker
 - Dockerfile for prod (disable the test URLs)
 - Dockerfile.dev for dev (enable the test URLs)
@@ -14,8 +18,15 @@
 ### using docker-compose for dev mode (prod mode not included)
 - `docker-compose up --build --force-recreate`
 
-## dev mode
-### test api:
+## dependencies
+- postgresql with the latest version
+- Node.js >= 14.0.0
+
+## core structure
+- /TwitterAnalysis back-end system with Play, PostgreSQL and Spark
+- /client front-end system
+
+## test api (similar to unit test, test play rest api):
 - run base connect `GET /test`
 ```json
   {"success": "1"}
@@ -63,14 +74,14 @@ make sure to run the init data api first to insert data
 note: offset and limit are optional, but they must show up together
 - select all `POST /selectAll`
 
-    request body
+  request body
     ```json
     {
         "offset": 1,
         "limit": 2
     }
     ```
-    return
+  return
     ```json
     {
         "Success": "1",
@@ -88,7 +99,7 @@ note: offset and limit are optional, but they must show up together
     ```
 - select keywords by company name `POST /selectByComp`
 
-    request body
+  request body
     ```json 
     {
         "name": "AppleSupport",
@@ -96,7 +107,7 @@ note: offset and limit are optional, but they must show up together
         "limit": 2
     }
     ```
-    return
+  return
     ```json
     {
         "Success": "1",
@@ -114,7 +125,7 @@ note: offset and limit are optional, but they must show up together
     ```
 - select keywords by time period `POST /selectByTime`
 
-    request body
+  request body
     ```json 
     {
         "start": "2017-10-10",
@@ -123,7 +134,7 @@ note: offset and limit are optional, but they must show up together
         "limit": 2
     }
     ```
-    return
+  return
     ```json
     {
         "Success": "1",
@@ -141,7 +152,7 @@ note: offset and limit are optional, but they must show up together
     ```
 - select keywords by time period and company `POST /selectByTimeAndComp`
 
-    request body
+  request body
     ```json 
     {
         "name": "AppleSupport"
@@ -151,7 +162,7 @@ note: offset and limit are optional, but they must show up together
         "limit": 2
     }
     ```
-    return
+  return
     ```json
     {
         "Success": "1",
