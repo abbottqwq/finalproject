@@ -47,9 +47,13 @@ export default function WordCloudPage() {
 		}
 	}, [res_comp]);
 
-	useEffect(() => {
+	// useEffect(() => {
+	// 	request_comp();
+	// }, []);
+
+	const onClick_comp = () => {
 		request_comp();
-	}, []);
+	};
 
 	const req = (limit, offset) => {
 		request({ limit: limit, offset: offset });
@@ -81,6 +85,10 @@ export default function WordCloudPage() {
 		if (error) console.error(error);
 	}, [error]);
 
+	useEffect(() => {
+		if (error_comp) console.error(error_comp);
+	}, [error_comp]);
+
 	return (
 		<>
 			<WordCloud data={wordData} />
@@ -97,7 +105,10 @@ export default function WordCloudPage() {
 				get
 			</SubmitButton>
 			<br />
-			<WordCloud data={compData} />
+			<WordCloud data={compData} loading={loading_comp} />
+			<SubmitButton loading={loading_comp} onClick={onClick_comp}>
+				get
+			</SubmitButton>
 		</>
 	);
 }
