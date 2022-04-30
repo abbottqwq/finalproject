@@ -1,4 +1,4 @@
-import dao.TweetImplDAO
+import dao.{CustomerSupportDAO, TweetImplDAO}
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
@@ -7,7 +7,7 @@ import spark.SparkIns
 
 import scala.util.{Success, Try}
 
-class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
+class CustomerSupportDAOSpec extends PlaySpec with BeforeAndAfter {
 
 	implicit var config: Configuration = _
 	implicit var sparkIns: SparkIns = _
@@ -50,32 +50,17 @@ class TweetDAOSpec extends PlaySpec with BeforeAndAfter {
 			Try(sparkIns.readTable(tweetImplDAO.tableName)) mustBe a[Success[_]]
 		}
 
-		"read_data_by_company" in {
-			val tweetImplDAO = new TweetImplDAO(sparkIns)
-			val result = tweetImplDAO.readByCompanyName("AppleSupport")
-			result.show(truncate = false)
+		"select_time_period" in {
+			val customerDao = new CustomerSupportDAO(sparkIns)
+			val result = customerDao.selectTimePeriod()
 			Try(result.count()) mustBe a[Success[_]]
 		}
 
-		"read_data_by_time" in {
-			val tweetImplDAO = new TweetImplDAO(sparkIns)
-			val result = tweetImplDAO.readByTime("2017-10-10", "2017-10-12")
-			result.show(truncate = false)
-			result.count() mustBe 205
+		"selectAll" in {
+			val customerDao = new CustomerSupportDAO(sparkIns)
+			val result = customerDao.selectAll()
+			Try(result.count()) mustBe a[Success[_]]
 		}
 
-		"read_data_by_company_and_time" in {
-			val tweetImplDAO = new TweetImplDAO(sparkIns)
-			val result = tweetImplDAO.readByCompanyAndTime("AppleSupport","2017-10-10", "2017-10-12")
-			result.show(truncate = false)
-			result.count() mustBe 71
-		}
-
-		"read_top_company" in {
-			val tweetImplDAO = new TweetImplDAO(sparkIns)
-			val result = tweetImplDAO.getTop20Company
-			result.show(truncate = false)
-			result.count() mustBe 7
-		}
 	}
 }

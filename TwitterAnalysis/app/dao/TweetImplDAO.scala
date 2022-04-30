@@ -1,10 +1,9 @@
 package dao
 
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode}
 import spark.SparkIns
-import org.apache.spark.sql.expressions.Window
-import utils.implicits.TimeConvert.StringTimeConversions
 
 import javax.inject.{Inject, Singleton}
 
