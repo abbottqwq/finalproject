@@ -14,7 +14,7 @@ case class Analyzer @Inject()(sparkIns: SparkIns, tweetImplDAO: TweetImplDAO, cu
 
 	def init_data(): Unit = {
 		val spark: SparkSession = sparkIns.spark
-		val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/sample.csv")
+		val df: DataFrame = spark.read.option("delimiter", ",").option("header", "true").csv("resources/twcs.csv")
 
 		val result = super.preprocessing(df)
 		Future {
