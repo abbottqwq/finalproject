@@ -4,9 +4,7 @@
 ## about the project
 > before running, remember to **RENAME .env.example to .env**
 
-> if you want to use the original dataset, download the datasource to /TwitterAnalysis/resources
-
-> if you want to init data more than once, make sure to delete the spark-warehouse automatically created in local first
+> if you want to use the original dataset, download the datasource from Kaggle(url in PPT) to /TwitterAnalysis/resources
 
 > if you have any issue with the UI, you can use Postman to test APIs below
 
@@ -18,16 +16,23 @@
 - sbt run -Dconfig.file=conf/prod.conf for prod (disable the test URLs)
 - sbt run for dev (enable the test URLs)
 
-### using docker-compose for dev mode (prod mode not included)
+### using docker-compose for dev mode (recommended)
+- download the datasource from Kaggle(url in PPT) to /TwitterAnalysis/resources, you may have to create the "resources" directory first
+- rename .env.example to .env
+- cd /TwitterAnalysis
 - `docker-compose up --build --force-recreate`
+- when you see the port with 9000 exposed, you can start visit http://localhost:9999 to see UI(our nginx)
+- click init button to init data, this API uses Future to load data to local spark-warehouse, so please wait until the terminal prints "save to local spark-warehouse finished!", it may take some time since the dataset is large
+- After seeing the "success" output, you can try other buttons to see results
+- if you have any issue with the UI, you can use Postman to test APIs below directly, the port is 9000
 
 ## dependencies
+- docker with the latest version (if you use docker, you don't need to install other dependencies)
 - postgresql with the latest version
 - Node.js >= 14.0.0
-- docker with the latest version if you want
 
 ## core structure
-- /TwitterAnalysis back-end system with Play, PostgreSQL and Spark
+- /TwitterAnalysis back-end system with Play, PostgreSQL, unit tests and Spark
 - /client front-end system
 
 ## test api (similar to unit test, test play rest api):
