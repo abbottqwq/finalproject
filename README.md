@@ -8,13 +8,11 @@
 
 > if you have any issue with the UI, you can use Postman to test APIs below
 
-### using docker
-- Dockerfile for prod (disable the test URLs)
-- Dockerfile.dev for dev (enable the test URLs)
 
 ### using sbt
-- sbt run -Dconfig.file=conf/prod.conf for prod (disable the test URLs)
-- sbt run for dev (enable the test URLs)
+- run ```/TwitterAnalysis/sbt_local.sh``` remember to change the java env path in that shell; then ```run``` and enter
+- or just run ```sbt run``` (not recommanded becasue it won't use any .env file)
+- in ./client run ```yarn && yarn start```
 
 ### using docker-compose for dev mode (recommended)
 - download the datasource from Kaggle(url in PPT) to /TwitterAnalysis/resources, you may have to create the "resources" directory first
