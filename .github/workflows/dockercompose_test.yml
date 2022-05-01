@@ -22,7 +22,7 @@ jobs:
         
     - name: Wait the container to be stable
       run: |
-        sleep 60s
+        sleep 120s
         docker ps -a
       shell: bash
       
